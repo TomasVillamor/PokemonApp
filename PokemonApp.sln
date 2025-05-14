@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.API", "..\repos\PokemonApp.API\PokemonApp.API.csproj", "{52544D91-F6FE-4E32-B534-27E2933959DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.API", "PokemonApp.API\PokemonApp.API.csproj", "{52544D91-F6FE-4E32-B534-27E2933959DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.DataAcess", "..\repos\PokemonApp.DataAcess\PokemonApp.DataAcess.csproj", "{0CC6505F-D35B-475D-BB34-4BF4B3D4F288}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.DataAcess", "PokemonApp.DataAcess\PokemonApp.DataAcess.csproj", "{0CC6505F-D35B-475D-BB34-4BF4B3D4F288}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.Domain", "..\repos\PokemonApp.Domain\PokemonApp.Domain.csproj", "{55FD7FEF-2CED-4B6C-80F7-AE5CC53E41FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.Domain", "PokemonApp.Domain\PokemonApp.Domain.csproj", "{55FD7FEF-2CED-4B6C-80F7-AE5CC53E41FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.Services", "..\repos\PokemonApp.Services\PokemonApp.Services.csproj", "{BAF35562-6659-4127-884F-4DAE290848AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.Services", "PokemonApp.Services\PokemonApp.Services.csproj", "{BAF35562-6659-4127-884F-4DAE290848AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.Tests", "..\repos\PokemonApp\PokemonApp.Tests\PokemonApp.Tests.csproj", "{751363AE-57D7-4E05-BC1D-DC88C17C94B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp.Tests", "PokemonApp.Tests\PokemonApp.Tests.csproj", "{751363AE-57D7-4E05-BC1D-DC88C17C94B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
