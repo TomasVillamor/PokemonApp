@@ -12,7 +12,7 @@ Por ejemplo:
 "ConnectionStrings": {
   "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=PokemonDb;Trusted_Connection=True;TrustServerCertificate=True"
 }
-3.Luego ejecutar el comando: dotnet ef database update para crear la estructura de la base de datos
+3.Luego ejecutar el comando: dotnet ef database update para crear la estructura de la base de datos o desde el vs abrir el administrador de paquetes, elegir el proyecto PokemonApp.DataAcess y ejecutar el comando update database
 4.Por ultimo, ejecutar la aplicacion desde el VS o dotnet run --project PokemonApp.API. Accede a la documentacion en el swagger https://localhost:{puerto}/swagger
 
 DOCUMENTACION DE LA APP
@@ -31,6 +31,35 @@ Esta decisión se debe para preservar la integridad de los datos sincronizados, 
 Autenticación
 Se genera un JWT y se debe usar en el header Authorization: Bearer <token>.
 Los endpoints estan protegidos como se menciona en el challenge.
+
+Endpoins
+
+AuthController
+POST /api/auth/register
+Registra un nuevo usuario con email, username y password.
+
+POST /api/auth/login
+Inicia sesión. Devuelve un JWT si las credenciales son válidas.
+
+PokemonController
+GET /api/pokemon
+Lista todos los Pokémon registrados en la base de datos.
+
+GET /api/pokemon/{id}
+Obtiene los detalles de un Pokémon por su ID.
+
+POST /api/pokemon
+Crea un nuevo Pokémon en la base de datos.
+
+PUT /api/pokemon/{id}
+Actualiza un Pokémon existente.
+
+DELETE /api/pokemon/{id}
+Elimina un Pokémon por ID.
+
+POST /api/pokemon/sync
+Sincroniza datos desde la PokéAPI. Trae todos los pokemones de la API externa, si eliminas alguno y sincronizas depues te trae el eliminado.
+
 
 Ingeniera de sotware
 Se realiazo mediante la arquitecura de capas. Cada una conoce hacia "abajo", no esta permitido conocer a la de "arriba"
