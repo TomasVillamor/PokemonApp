@@ -2,7 +2,7 @@
 using PokemonApp.Domain.Models;
 using PokemonApp.Services.Helpers;
 using PokemonApp.Services.Interfaces;
-
+using PokemonApp.DataAcess.Repositories.Interfaces;
 namespace PokemonApp.Services.Services;
 public class AdminSeeder : ISeeder
 {
