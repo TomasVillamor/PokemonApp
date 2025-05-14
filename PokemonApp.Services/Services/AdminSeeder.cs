@@ -6,16 +6,17 @@ using PokemonApp.Services.Interfaces;
 namespace PokemonApp.Services.Services;
 public class AdminSeeder : ISeeder
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IUserRepository _userRepository;
 
-    public AdminSeeder(ApplicationDbContext context)
+    public AdminSeeder(IUserRepository userRepository)
     {
-        _context = context;
+        _userRepository = userRepository;
     }
 
     public async Task SeedAsync()
     {
-        if (!_context.Users.Any(u => u.Email == "admin@test.com"))
+        var existingAdmin = await _userRepository.GetByEmailAsync("admin@test.com");
+        if (existingAdmin == null)
         {
             PasswordHelper.CreatePasswordHash("admin123", out var hash, out var salt);
 
@@ -25,12 +26,11 @@ public class AdminSeeder : ISeeder
                 Email = "admin@test.com",
                 PasswordHash = hash,
                 PasswordSalt = salt,
-                RoleId = 1, // Rol "Admin"
+                RoleId = 1, // Admin
                 CreatedAt = DateTime.UtcNow
             };
 
-            _context.Users.Add(adminUser);
-            await _context.SaveChangesAsync();
+            await _userRepository.AddAsync(adminUser);
         }
     }
 }
