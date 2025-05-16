@@ -1,19 +1,22 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using PokemonApp.Domain.Models;
+using PokemonApp.Services.Helpers;
 using PokemonApp.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 namespace PokemonApp.Services.Services;
+
+
 public class JwtService : IJwtService
 {
-    private readonly IConfiguration _config;
+    private readonly JwtSettings _settings;
 
-    public JwtService(IConfiguration config)
+    public JwtService(IOptions<JwtSettings> options)
     {
-        _config = config;
+        _settings = options.Value;
     }
 
     public string GenerateToken(User user)
@@ -25,15 +28,19 @@ public class JwtService : IJwtService
             new Claim(ClaimTypes.Role, user.Role.Name)
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
         var token = new JwtSecurityToken(
+            issuer: _settings.Issuer,
+            audience: _settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: DateTime.UtcNow.AddMinutes(_settings.ExpiresInMinutes),
             signingCredentials: creds
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
+
+

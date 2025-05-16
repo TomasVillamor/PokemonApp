@@ -6,9 +6,11 @@ using PokemonApp.DataAcess.Repositories;
 using PokemonApp.DataAcess.Repositories.Interfaces;
 using PokemonApp.Services.Interfaces;
 using PokemonApp.Services.Services;
+using PokemonApp.Services.Helpers;
 using System.Text;
 using PokemonApp.Domain.Mapping;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,23 +27,32 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
 builder.Services.AddScoped<IPokemonService, PokemonService>();
 builder.Services.AddAutoMapper(typeof(PokemonProfile));
+builder.Services.Configure<AdminUserSettings>(builder.Configuration.GetSection("AdminUser"));
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()!;
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
         opt.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtSettings.Audience,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+                Encoding.UTF8.GetBytes(jwtSettings.Key)),
+            ValidateLifetime = true
         };
     });
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthorization(options =>
 {
@@ -84,6 +95,8 @@ builder.Services.AddHttpClient("PokeApi", client =>
 });
 
 var app = builder.Build();
+
+
 
 using (var scope = app.Services.CreateScope())
 {
