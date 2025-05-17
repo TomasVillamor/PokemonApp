@@ -9,6 +9,7 @@ INSTRUCCIONES PARA CORRER LA APP
 1.Clonar el repositorio
 2.Debes crear el archivo appsettings.Development.json en PokemonApp.API y realizar lo siguiente:
 Copiar y pegar este texto:
+ {
  "ConnectionStrings": {
     "DefaultConnection": "Server=;Database=PokemonAppDb;Trusted_Connection=True;TrustServerCertificate=True;"
   },
@@ -22,6 +23,7 @@ Copiar y pegar este texto:
     "Issuer": "PokemonAPI",
     "Audience": "PokemonUsers",
     "ExpiresInMinutes": 60
+  }
   }
 En "ConnectionStrings" en el campo "Server" ingresar el nombre del servidor de tu instacia local de SQL server
 3.Luego ejecutar el comando: dotnet ef database update para crear la estructura de la base de datos o desde el vs abrir el administrador de paquetes, elegir el proyecto PokemonApp.DataAcess y ejecutar el comando update database
@@ -48,7 +50,7 @@ Endpoins
 
 AuthController
 POST /api/auth/register
-Registra un nuevo usuario con email, username y password.
+Registra un nuevo usuario con email, username y password
 
 POST /api/auth/login
 Inicia sesión. Devuelve un JWT si las credenciales son válidas.
