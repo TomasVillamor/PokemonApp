@@ -7,11 +7,23 @@ REQUISITOS PREVIOS
 
 INSTRUCCIONES PARA CORRER LA APP
 1.Clonar el repositorio
-2.En el archivo appsettings.json de PokemonApp.API, debes ingresar el nombre del servidor de tu instancia local de SQL Server en el campo "DefaultConnection".
-Por ejemplo:
-"ConnectionStrings": {
-  "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=PokemonDb;Trusted_Connection=True;TrustServerCertificate=True"
-}
+2.Debes crear el archivo appsettings.Development.json en PokemonApp.API y realizar lo siguiente:
+Copiar y pegar este texto:
+ "ConnectionStrings": {
+    "DefaultConnection": "Server=;Database=PokemonAppDb;Trusted_Connection=True;TrustServerCertificate=True;"
+  },
+  "AdminUser": {
+    "Email": "admin@test.com",
+    "Username": "admin",
+    "Password": "admin123"
+  },
+  "Jwt": {
+    "Key": "b3d#0GzP!rF6aQ@vLw8zYc2jN0kE3hU5XvM9qSbT1gR7dLuCcHsPaKzWxEfVbGyT",
+    "Issuer": "PokemonAPI",
+    "Audience": "PokemonUsers",
+    "ExpiresInMinutes": 60
+  }
+En "ConnectionStrings" en el campo "Server" ingresar el nombre del servidor de tu instacia local de SQL server
 3.Luego ejecutar el comando: dotnet ef database update para crear la estructura de la base de datos o desde el vs abrir el administrador de paquetes, elegir el proyecto PokemonApp.DataAcess y ejecutar el comando update database
 4.Por ultimo, ejecutar la aplicacion desde el VS o dotnet run --project PokemonApp.API. Accede a la documentacion en el swagger https://localhost:{puerto}/swagger
 
