@@ -52,7 +52,11 @@ builder.Services
     });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()
+    ));
+
 
 builder.Services.AddAuthorization(options =>
 {
@@ -96,6 +100,23 @@ builder.Services.AddHttpClient("PokeApi", client =>
 
 var app = builder.Build();
 
+if (!app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
+        logger.LogInformation("Migraciones aplicadas correctamente en producción.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error al aplicar migraciones en producción.");
+    }
+}
+
 using (var scope = app.Services.CreateScope())
 {
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
@@ -120,23 +141,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-if (!app.Environment.IsDevelopment())
-{
-    using var scope = app.Services.CreateScope();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-
-    try
-    {
-        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        db.Database.Migrate();
-        logger.LogInformation("Migraciones aplicadas correctamente en producción.");
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "Error al aplicar migraciones en producción.");
-    }
-}
-
-
 app.Run();
