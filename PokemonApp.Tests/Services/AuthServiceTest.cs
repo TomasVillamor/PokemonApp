@@ -5,6 +5,7 @@ using PokemonApp.Services.Services;
 using PokemonApp.Domain.Dtos.Auth;
 using PokemonApp.Services.Interfaces;
 using PokemonApp.Services.Helpers;
+using Microsoft.Extensions.Logging;
 namespace PokemonApp.Tests.Services;
 public class AuthServiceTest
 {
@@ -40,7 +41,7 @@ public class AuthServiceTest
 
         jwtMock.Setup(j => j.GenerateToken(fakeUser)).Returns("fake-jwt-token");
 
-        var service = new AuthService(repoMock.Object, jwtMock.Object);
+        var service = new AuthService(repoMock.Object, jwtMock.Object, Mock.Of<ILogger<AuthService>>());
 
         var result = await service.RegisterAsync(dto);
 
@@ -59,7 +60,7 @@ public class AuthServiceTest
 
         var jwtMock = new Mock<IJwtService>();
 
-        var service = new AuthService(repoMock.Object, jwtMock.Object);
+        var service = new AuthService(repoMock.Object, jwtMock.Object, Mock.Of<ILogger<AuthService>>());
 
         await Assert.ThrowsAsync<Exception>(() => service.RegisterAsync(dto));
     }
@@ -84,7 +85,7 @@ public class AuthServiceTest
         var jwtMock = new Mock<IJwtService>();
         jwtMock.Setup(j => j.GenerateToken(user)).Returns("fake-jwt-token");
 
-        var service = new AuthService(repoMock.Object, jwtMock.Object);
+        var service = new AuthService(repoMock.Object, jwtMock.Object, Mock.Of<ILogger<AuthService>>());
 
         var result = await service.LoginAsync(dto);
 
@@ -110,7 +111,7 @@ public class AuthServiceTest
 
         var jwtMock = new Mock<IJwtService>();
 
-        var service = new AuthService(repoMock.Object, jwtMock.Object);
+        var service = new AuthService(repoMock.Object, jwtMock.Object, Mock.Of<ILogger<AuthService>>());
 
         await Assert.ThrowsAsync<Exception>(() => service.LoginAsync(dto));
     }
@@ -125,7 +126,7 @@ public class AuthServiceTest
 
         var jwtMock = new Mock<IJwtService>();
 
-        var service = new AuthService(repoMock.Object, jwtMock.Object);
+        var service = new AuthService(repoMock.Object, jwtMock.Object, Mock.Of<ILogger<AuthService>>());
 
         var ex = await Assert.ThrowsAsync<Exception>(() => service.LoginAsync(dto));
         Assert.Equal("No existe el usuario con el mail ingresado", ex.Message);

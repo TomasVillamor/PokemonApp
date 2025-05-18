@@ -8,5 +8,5 @@ public interface IPokemonService
     Task<PokemonReadDto> CreateAsync(PokemonCreateDto dto);
     Task<PokemonReadDto> UpdateAsync(int id, PokemonUpdateDto dto);
     Task DeleteAsync(int id);
-    Task<int> SyncFromPokeApiAsync();
+    Task<(int Added, int Updated)> SyncFromPokeApiAsync();
 }

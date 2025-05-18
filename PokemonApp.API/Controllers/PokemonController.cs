@@ -97,20 +97,25 @@ public class PokemonController : ControllerBase
     }
 
 
-
     [HttpPost("sync")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Sync()
     {
         try
         {
-            var count = await _pokemonService.SyncFromPokeApiAsync();
-            return Ok(ApiResponse<string>.Ok($"Se sincronizaron {count} Pokémon desde la PokéAPI."));
+            var (added, updated) = await _pokemonService.SyncFromPokeApiAsync();
+            var total = added + updated;
+
+            return Ok(ApiResponse<string>.Ok(
+                $"Se sincronizaron {total} Pokémon desde la PokéAPI. " +
+                $"(Nuevos: {added}, Actualizados: {updated})"
+            ));
         }
         catch (Exception ex)
         {
             return StatusCode(500, ApiResponse<string>.Fail("Error en la sincronización: " + ex.Message));
         }
     }
+
 
 }

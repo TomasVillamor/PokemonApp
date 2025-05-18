@@ -4,6 +4,7 @@ using PokemonApp.Domain.Models;
 using PokemonApp.DataAcess.Repositories.Interfaces;
 using PokemonApp.Domain.Dtos.Pokemon;
 using PokemonApp.Services.Services;
+using Microsoft.Extensions.Logging;
 namespace PokemonApp.Tests.Services;
 
 public class PokemonServiceTest
@@ -29,7 +30,7 @@ public class PokemonServiceTest
         mapperMock.Setup(m => m.Map<IEnumerable<PokemonReadDto>>(fakePokemons))
                   .Returns(expectedDtos);
 
-        var service = new PokemonService(repoMock.Object, mapperMock.Object, Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, mapperMock.Object, Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var result = await service.GetAllAsync();
 
@@ -48,7 +49,7 @@ public class PokemonServiceTest
         var mapperMock = new Mock<IMapper>();
         mapperMock.Setup(m => m.Map<PokemonReadDto>(pokemon)).Returns(expectedDto);
 
-        var service = new PokemonService(repoMock.Object, mapperMock.Object, Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, mapperMock.Object, Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var result = await service.GetByIdAsync(1);
 
@@ -65,7 +66,7 @@ public class PokemonServiceTest
         var repoMock = new Mock<IPokemonRepository>();
         repoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((Pokemon?)null);
 
-        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var result = await service.GetByIdAsync(99);
 
@@ -87,7 +88,7 @@ public class PokemonServiceTest
         mapperMock.Setup(m => m.Map<Pokemon>(createDto)).Returns(entity);
         mapperMock.Setup(m => m.Map<PokemonReadDto>(entity)).Returns(expectedDto);
 
-        var service = new PokemonService(repoMock.Object, mapperMock.Object, Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, mapperMock.Object, Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var result = await service.CreateAsync(createDto);
 
@@ -105,7 +106,7 @@ public class PokemonServiceTest
         var repoMock = new Mock<IPokemonRepository>();
         repoMock.Setup(r => r.ExistsByNameAsync(dto.Name)).ReturnsAsync(true);
 
-        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var ex = await Assert.ThrowsAsync<Exception>(() => service.CreateAsync(dto));
         Assert.Equal("Ya existe un Pokémon con ese nombre.", ex.Message);
@@ -119,7 +120,7 @@ public class PokemonServiceTest
         var repoMock = new Mock<IPokemonRepository>();
         repoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((Pokemon?)null);
 
-        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var dto = new PokemonUpdateDto { Name = "pikachu", Height = 4, Weight = 60 };
 
@@ -144,7 +145,7 @@ public class PokemonServiceTest
         var repoMock = new Mock<IPokemonRepository>();
         repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(pokemon);
 
-        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var dto = new PokemonUpdateDto { Name = "pikachu", Height = 5, Weight = 65 };
 
@@ -171,7 +172,7 @@ public class PokemonServiceTest
         repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(pokemon);
         repoMock.Setup(r => r.ExistsByNameAsync(dto.Name)).ReturnsAsync(true);
 
-        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var ex = await Assert.ThrowsAsync<Exception>(() => service.UpdateAsync(1, dto));
         Assert.Equal("Ya existe un registro con este nombre de pokemon", ex.Message);
@@ -208,7 +209,7 @@ public class PokemonServiceTest
         var mapperMock = new Mock<IMapper>();
         mapperMock.Setup(m => m.Map<PokemonReadDto>(pokemon)).Returns(updatedDto);
 
-        var service = new PokemonService(repoMock.Object, mapperMock.Object, Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, mapperMock.Object, Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var result = await service.UpdateAsync(1, dto);
 
@@ -230,7 +231,7 @@ public class PokemonServiceTest
         repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(pokemon);
         repoMock.Setup(r => r.DeleteAsync(pokemon)).Returns(Task.CompletedTask);
 
-        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         await service.DeleteAsync(1);
 
@@ -243,7 +244,7 @@ public class PokemonServiceTest
         var repoMock = new Mock<IPokemonRepository>();
         repoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((Pokemon?)null);
 
-        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>());
+        var service = new PokemonService(repoMock.Object, Mock.Of<IMapper>(), Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<PokemonService>>());
 
         var ex = await Assert.ThrowsAsync<Exception>(() => service.DeleteAsync(99));
         Assert.Equal("Pokémon no encontrado.", ex.Message);

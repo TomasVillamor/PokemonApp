@@ -60,15 +60,15 @@ public class ApplicationDbContext : DbContext
             entity.Property(p => p.Name)
                   .IsRequired()
                   .HasMaxLength(100);
-            entity.Property(p => p.Height)
-                  .IsRequired();
-            entity.Property(p => p.Weight)
-                  .IsRequired();
+            entity.Property(p => p.Height).IsRequired();
+            entity.Property(p => p.Weight).IsRequired();
             entity.HasIndex(p => p.Name)
                   .IsUnique()
                   .HasDatabaseName("UX_Pokemon_Name");
+            entity.HasIndex(p => p.PokeApiId)
+                  .IsUnique()
+                  .HasDatabaseName("UX_Pokemon_PokeApiId");
         });
-
 
     }
 }

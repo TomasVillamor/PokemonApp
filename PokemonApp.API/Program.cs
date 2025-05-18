@@ -10,7 +10,7 @@ using PokemonApp.Services.Helpers;
 using System.Text;
 using PokemonApp.Domain.Mapping;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Options;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -96,18 +96,18 @@ builder.Services.AddHttpClient("PokeApi", client =>
 
 var app = builder.Build();
 
-
-
 using (var scope = app.Services.CreateScope())
 {
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     try
     {
         var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
         await seeder.SeedAsync();
+        logger.LogInformation("Seeding de datos completado correctamente.");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Error during seed: {ex.Message}");
+        logger.LogError(ex, "Error durante el seeding de datos.");
     }
 }
 
@@ -120,5 +120,23 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+if (!app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
+        logger.LogInformation("Migraciones aplicadas correctamente en producción.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error al aplicar migraciones en producción.");
+    }
+}
+
 
 app.Run();
