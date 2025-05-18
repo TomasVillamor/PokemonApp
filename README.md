@@ -12,9 +12,8 @@ La base de datos es SQL Server, alojada en Azure y conectada desde Render.
 
 INSTRUCCIONES PARA CORRER LA APP LOCALMENTE
 1.Clonar el repositorio
-2.Debes crear el archivo appsettings.Development.json en PokemonApp.API y realizar lo siguiente:
-Copiar y pegar este texto:
- {
+2.En el archivo appsettings.json en PokemonApp.API copiar y pegar este texto:
+ 
  "ConnectionStrings": {
     "DefaultConnection": "Server=;Database=PokemonAppDb;Trusted_Connection=True;TrustServerCertificate=True;"
   },
@@ -29,9 +28,9 @@ Copiar y pegar este texto:
     "Audience": "PokemonUsers",
     "ExpiresInMinutes": 60
   }
-  }
+  
 En "ConnectionStrings" en el campo "Server" ingresar el nombre del servidor de tu instacia local de SQL server
-3.Luego ejecutar el comando: dotnet ef database update para crear la estructura de la base de datos o desde el vs abrir el administrador de paquetes, elegir el proyecto PokemonApp.DataAcess y ejecutar el comando update database
+3.Luego desde visual studio, abrir la consola de administrador de paquetes, seleccionar PokemonApp.DataAccess y ejecutar el comando Update-Database
 4.Por ultimo, ejecutar la aplicacion desde el VS o dotnet run --project PokemonApp.API. Accede a la documentacion en el swagger https://localhost:{puerto}/swagger
 
 DOCUMENTACION DE LA APP
