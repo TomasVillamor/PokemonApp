@@ -5,11 +5,15 @@ REQUISITOS PREVIOS
 .Visual Studio 2022 o VS Code
 .Git
 
-INSTRUCCIONES PARA CORRER LA APP
+APP PRODUCTIVA
+URL: https://pokemonapp-dnkk.onrender.com/swagger/index.html
+La aplicación se encuentra desplegada en Render con integración continua mediante GitHub.
+La base de datos es SQL Server, alojada en Azure y conectada desde Render.
+
+INSTRUCCIONES PARA CORRER LA APP LOCALMENTE
 1.Clonar el repositorio
-2.Debes crear el archivo appsettings.Development.json en PokemonApp.API y realizar lo siguiente:
-Copiar y pegar este texto:
- {
+2.En el archivo appsettings.json en PokemonApp.API copiar y pegar este texto:
+ 
  "ConnectionStrings": {
     "DefaultConnection": "Server=;Database=PokemonAppDb;Trusted_Connection=True;TrustServerCertificate=True;"
   },
@@ -24,9 +28,9 @@ Copiar y pegar este texto:
     "Audience": "PokemonUsers",
     "ExpiresInMinutes": 60
   }
-  }
+  
 En "ConnectionStrings" en el campo "Server" ingresar el nombre del servidor de tu instacia local de SQL server
-3.Luego ejecutar el comando: dotnet ef database update para crear la estructura de la base de datos o desde el vs abrir el administrador de paquetes, elegir el proyecto PokemonApp.DataAcess y ejecutar el comando update database
+3.Luego desde visual studio, abrir la consola de administrador de paquetes, seleccionar PokemonApp.DataAccess y ejecutar el comando Update-Database
 4.Por ultimo, ejecutar la aplicacion desde el VS o dotnet run --project PokemonApp.API. Accede a la documentacion en el swagger https://localhost:{puerto}/swagger
 
 DOCUMENTACION DE LA APP
@@ -72,11 +76,13 @@ DELETE /api/pokemon/{id}
 Elimina un Pokémon por ID.
 
 POST /api/pokemon/sync
-Sincroniza datos desde la PokéAPI. Trae todos los pokemones de la API externa, si eliminas alguno y sincronizas depues te trae el eliminado.
+Sincroniza datos desde la PokéAPI, trae todos los pokemones de la API externa.
+La PokeAPI no ofrece un mecanismo de actulizacion incremental como un fecha de ultima modificacion. Esto implica que no es posible saber si un pokemon fue modificado desde la ultima sincronizacion.
+Por lo tanto, se opto por favorecer la integridad de datos sobre la performance. En lugar de asumir que los datos se mantienen inalterados, el sistema vuelve a consultar cada pokemon indivualmente y los compara con los registros existentes de la base de datos.
 
 
 Ingeniera de sotware
-Se realiazo mediante la arquitecura de capas. Cada una conoce hacia "abajo", no esta permitido conocer a la de "arriba"
+Se realiazo mediante la arquitecura de capas. 
 PokemonApp.API -> Capa de presentación (controladores, configuración)
 PokemonApp.Services -> Lógica de negocio (servicios)
 PokemonApp.DataAccess -> Acceso a datos (repositorios, EF)
