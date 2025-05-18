@@ -100,18 +100,22 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
-    await seeder.SeedAsync();
+    try
+    {
+        var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
+        await seeder.SeedAsync();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error during seed: {ex.Message}");
+    }
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
