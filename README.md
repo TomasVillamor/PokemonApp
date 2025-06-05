@@ -23,7 +23,7 @@ INSTRUCCIONES PARA CORRER LA APP LOCALMENTE
     "Password": "admin123"
   },
   "Jwt": {
-    "Key": "b3d#0GzP!rF6aQ@vLw8zYc2jN0kE3hU5XvM9qSbT1gR7dLuCcHsPaKzWxEfVbGyT",
+    "Key": "Agregar tu clave segura",
     "Issuer": "PokemonAPI",
     "Audience": "PokemonUsers",
     "ExpiresInMinutes": 60
