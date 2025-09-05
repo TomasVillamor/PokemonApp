@@ -26,7 +26,9 @@ builder.Services.AddScoped<ISeeder, AdminSeeder>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
 builder.Services.AddScoped<IPokemonService, PokemonService>();
-builder.Services.AddAutoMapper(typeof(PokemonProfile));
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddAutoMapper(typeof(PokemonProfile), typeof(CategoryProfile));
 builder.Services.Configure<AdminUserSettings>(builder.Configuration.GetSection("AdminUser"));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
@@ -52,9 +54,8 @@ builder.Services
     });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions => sqlOptions.EnableRetryOnFailure()
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
 
@@ -109,11 +110,11 @@ if (!app.Environment.IsDevelopment())
     {
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         db.Database.Migrate();
-        logger.LogInformation("Migraciones aplicadas correctamente en producción.");
+        logger.LogInformation("Migraciones aplicadas correctamente en producciï¿½n.");
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "Error al aplicar migraciones en producción.");
+        logger.LogError(ex, "Error al aplicar migraciones en producciï¿½n.");
     }
 }
 

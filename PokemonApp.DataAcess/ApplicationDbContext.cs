@@ -8,6 +8,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Pokemon> Pokemons { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -68,6 +69,27 @@ public class ApplicationDbContext : DbContext
             entity.HasIndex(p => p.PokeApiId)
                   .IsUnique()
                   .HasDatabaseName("UX_Pokemon_PokeApiId");
+        });
+
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.ToTable("Categories");
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Name)
+                  .IsRequired()
+                  .HasMaxLength(50);
+            entity.Property(c => c.Description)
+                  .IsRequired()
+                  .HasMaxLength(200);
+            entity.Property(c => c.CreatedAt)
+                  .IsRequired()
+                  .HasDefaultValueSql("GETUTCDATE()");
+            entity.Property(c => c.UpdatedAt)
+                  .IsRequired()
+                  .HasDefaultValueSql("GETUTCDATE()");
+            entity.HasIndex(c => c.Name)
+                  .IsUnique()
+                  .HasDatabaseName("UX_Category_Name");
         });
 
     }
